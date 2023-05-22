@@ -1,18 +1,41 @@
-import Pane, { PaneProvider } from "./Pane";
 import Window from "./Window";
 import Header from "./Header";
-import { createSignal } from "solid-js";
+import { createEffect, createSignal, For } from "solid-js";
+import Hashids from "hashids";
 
 const App = () => {
-  const [windows, setWindows] = createSignal(new Set());
+  const hashids = new Hashids();
+  const generateWindowId = () => hashids.encode(Math.floor(Math.random() * 2 ** 16));
+  
+  const [windows, setWindows] = createSignal<Map<string, boolean>>(new Map());
+  
+  {() => windows().set(generateWindowId(), true)}
 
-  const addWindow = (name: string) => setWindows(windows().add({ id: 0, name }))
+  const addWindow = () => {
+    setWindows((windows) => {
+      for (const key of windows.keys()) {
+        windows.set(key, false);
+      }
+      
+      windows.set(generateWindowId(), true);
+
+      return new Map(windows);
+    });
+  }
+
+  const activateWindow = (id: string) => {
+    console.log(id)
+  }
 
   return (
   <>
-    <Header/>
+    <Header addWindow={addWindow} activateWindow={activateWindow}/>
     <main class="w-full h-full m-auto">
-      <Window/>
+      <For each={Array.from(windows())}>
+      {
+        (window) => <Window id={window[0]} active={window[1]}/>
+      }
+      </For>
     </main>
   </>
   );

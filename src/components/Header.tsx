@@ -1,14 +1,19 @@
 import { AiOutlinePlus as PlusIcon } from "solid-icons/ai";
 import Tab from "./Tab";
 import { createStore, produce } from "solid-js/store";
-import { For, createEffect, createRenderEffect, createSignal } from "solid-js";
+import { For, createSignal } from "solid-js";
+
+type Props = {
+  addWindow: () => void;
+  activateWindow: (id: string) => void;
+}
 
 type TabData = {
   id: number;
   name: string;
 };
 
-const Header = () => {
+const Header = (props: Props) => {
   const [tabs, setTabs] = createStore<TabData[]>([{ id: 0, name: "ash" }]);
   const [numTabs, setNumTabs] = createSignal<number>(0);
 
@@ -20,6 +25,7 @@ const Header = () => {
         tabs.push({ id: count, name: "ash" });
       })
     );
+    props.addWindow();
   };
 
   return (

@@ -38,7 +38,7 @@ const Pane = () => {
   const [results] = usePane();
 
   return (
-    <div>
+    <>
       <For each={results()}>
         {(result) => (
           <ResultBlock error={result.error} command={result.name}>
@@ -47,7 +47,7 @@ const Pane = () => {
         )}
       </For>
       <Block />
-    </div>
+    </>
   );
 };
 
